@@ -1,0 +1,68 @@
+Introduction: 
+This Document indicates setup own Docker Registery  
+ Docker Registry is an application that manages storing and delivering Docker container images. Registries centralize container images and reduce build times for developers. Docker images guarantee the same runtime environment through virtualization, but building an image can involve a significant time investment.
+Docker also has a free public registry, Docker Hub, that can host your custom Docker images, but there are situations where you will not want your image to be publicly available. Images typically contain all the code necessary to run an application, so using a private registry is preferable when using proprietary software.
+Prerequisites:
+•	Two Ubuntu Machines names node1 [Server] and node2 [client] 
+•	Should install Docker on two nodes (server, Client)
+•	Install Docker-compose on node1 [server]
+Understanding the setup:
+We are having two machines Node 1 and Node 2
+ 
+•	The IP Address for Node 1 is 192.168.1.45
+•	The IP address for Node2 is 192.168.1.49
+•	Node 2 will host the docker registry and Node 1 is the machine where images are getting created and then pushed to the docker registry or pulled from the docker registry.
+Docker: 
+                      Docker is a computer program that performs operating-system-level virtualization, also known as “containerization”. Docker is a popular tool to make it easier to build, deploy and run applications using containers. Containers allow us to package all the things that our application needs like such as libraries and other dependencies and ship it all as a single package. 
+Install and Use Docker on Ubuntu 16.04
+                                           Docker installation package available in the official Ubuntu 16.04 repository may not be the latest version. To get this latest version, install Docker from the official Docker repository.
+	First, downloads are valid, add the GPG key for the official Docker repository to your system
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add –
+
+	Add the Docker repository to APT sources:
+$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+ 
+	Update the package database with the Docker packages from the newly added repo:
+$ sudo apt-get update
+
+	Finally, install Docker:
+$  sudo apt-get install -y docker-ce
+
+	Docker should now be installed, the daemon started, and the process enabled to start on boot. Check that it’s running:
+$ sudo systemctl status docker
+ 
+
+	To view system-wide information about Docker, use:
+$ docker info
+Docker Compose:
+Compose is a tool for defining and running multi-container Docker applications. With Compose, use a YAML file to configure your application’s services. Then, with a single command to create and start all the services from your configuration.
+Using Compose is basically a three-step process:
+•	Define your app’s environment with a Dockerfile so it can be reproduced anywhere.
+•	Define the services that make up your app in docker-compose.yml so they can be run together in an isolated environment.
+•	Run docker-compose up and Compose starts and runs your entire app.
+Prerequisites:
+•	Need an Ubuntu 16.04 server 
+•	A non-root user with sudo privileges
+•	Docker installed 
+Installing Docker Compose:
+	Check the current release and if necessary, update it in the command below:
+$ sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+	Next  set the permissions
+$ sudo chmod +x /usr/local/bin/docker-compose
+	Then we have to verify that the installation was successful by checking the version:
+$ docker-compose –version
+Creating docker-compose file on Node 2:
+ 
+
+Updating the host file of Node 1 with the IP Address of Node 2
+ 
+Configuring Node 1 docker for interacting with insecure docker registry
+Stop the docker service
+$ sudo systemctl stop docker
+Update the docker daemon.json file with following values
+{  
+"insecure-registries":["selftuts.local.com:5000"] 
+}
+Start the docker service
+$ sudo systemctl start docker
+
